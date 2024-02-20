@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.1.4' // Use uma versão estável do Spring Boot
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE' // Versão estável do plugin de gerenciamento de dependências do Spring
+}
+
+group = 'example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.assertj:assertj-core:3.21.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2' // Adicione a dependência do JUnit Jupiter
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2' // Adicione a dependência do mecanismo JUnit Jupiter
+}
+
+tasks.named('bootBuildImage') {
+    builder = 'paketobuildpacks/builder-jammy-base:latest'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed" //, "standardOut", "standardError"
+        showExceptions true
+        exceptionFormat "full"
+        showCauses true
+        showStackTraces true
+        showStandardStreams = false // Change to `true` for more verbose test output
+    }
+}
+
