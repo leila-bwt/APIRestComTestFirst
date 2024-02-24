@@ -64,6 +64,80 @@ As classes de teste em um projeto Java padrão estão no diretório src/test, n�
 
 Uma convenção comum (mas não um requisito) é sempre usar o sufixo Test para classes de teste. Nós fizemos isso aqui. O nome completo da classe CashCardJsonTest dá uma pista sobre a natureza do teste que estamos prestes a escrever.
 
+## Implementando GET
+>>REST, CRUD E HTTP
+
+Vamos começar com uma definição concisa de REST : Representational State Transfer. Em um sistema RESTful, os objetos de dados são chamados de Representações de Recursos. O objetivo de uma API RESTful (Application Programming Interface) é gerenciar o estado desses recursos. 
+Dito de outra forma, você pode pensar em “estado” como “valor” e “Representação de Recursos” como um “objeto” ou “coisa”. Portanto, REST é apenas uma forma de gerenciar os valores das coisas. Essas coisas podem ser acessadas por meio de uma API e geralmente são armazenadas em um armazenamento de dados persistente, como um banco de dados.
+
+
+![rest](https://github.com/leila-bwt/APIRestComTestFirst/assets/108028195/3bd4ba6a-54a3-4119-9fe1-a17091fbf23d)
+
+Um conceito frequentemente mencionado quando se fala em REST é CRUD . CRUD significa “Criar, Ler, Atualizar e Excluir”. Estas são as quatro operações básicas que podem ser executadas em objetos em um armazenamento de dados.
+
+Outro conceito comum associado ao REST é o Protocolo de Transferência de Hipertexto. Em HTTP , um chamador envia uma solicitação para um URI. Um servidor web recebe a solicitação e a encaminha para um manipulador de solicitações. O manipulador cria uma resposta, que é então enviada de volta ao chamador.
+
+Os componentes da Solicitação e Resposta são:
+
+Solicitar
+    *Método (também chamado de Verbo)
+    *URI (também chamado de Endpoint)
+    *Corpo
+
+Resposta
+    *Código de status
+    *Corpo
+
+O poder do REST está na maneira como ele faz referência a um recurso e na aparência da solicitação e da resposta para cada operação CRUD.
+
+Para C REATE: use o método HTTP POST.
+Para R EAD: use o método HTTP GET.
+Para U PDATE: use o método HTTP PUT.
+Para D ELETE: use o método HTTP DELETE.
+
+O URI do terminal para objetos Cash Card começa com a /cashcardspalavra-chave. READ, UPDATEe DELETEas operações exigem que forneçamos o identificador exclusivo do recurso de destino. O aplicativo precisa desse identificador exclusivo para executar a ação correta exatamente no recurso correto. Por exemplo, para READ, UPDATE, ou DELETEum Cash Card com o identificador "42", o ponto final seria /cashcards/42.
+
+
+## O Corpo da Solicitação
+Ao seguir as convenções REST para criar ou atualizar um recurso, precisamos enviar dados para a API. Isso geralmente é chamado de corpo da solicitação . As operações CREATEe UPDATE exigem que um corpo de solicitação contenha os dados necessários para criar ou atualizar adequadamente o recurso. Por exemplo, um novo Cash Card pode ter um valor inicial em dinheiro e uma UPDATEoperação pode alterar esse valor.
+
+Anotações Spring e verificação de componentes
+Uma das principais coisas que o Spring faz é configurar e instanciar objetos. Esses objetos são chamados Spring Beans e geralmente são criados pelo Spring (em vez de usar a newpalavra-chave Java). Você pode direcionar o Spring para criar Beans de várias maneiras.
+
+Controladores Web Spring
+No Spring Web, as solicitações são tratadas por controladores.
+
+@RestController
+class CashCardController {
+}
+
+Isso é tudo o que é preciso para dizer ao Spring: “crie um controlador REST”. O Controlador é injetado no Spring Web, que roteia as solicitações de API (tratadas pelo Controlador) para o método correto.
+
+![controller](https://github.com/leila-bwt/APIRestComTestFirst/assets/108028195/47fe6ec7-92b2-426f-b1a1-3ac19574dd7d)
+
+Um método Controller pode ser designado como um método manipulador, a ser chamado quando uma solicitação que o método sabe como tratar (chamada de “solicitação de correspondência”) é recebida. Vamos escrever um método manipulador de solicitação de leitura! Aqui está um começo:
+
+![cont1](https://github.com/leila-bwt/APIRestComTestFirst/assets/108028195/3e39d7e4-6473-42c3-b0bc-c42ac2db2593)
+
+Como o REST diz que os endpoints de leitura devem usar o método HTTP GET, você precisa dizer ao Spring para rotear solicitações para o método apenas nas solicitações GET. Você pode usar a anotação @GetMapping , que precisa do caminho URI:
+
+![cont2](https://github.com/leila-bwt/APIRestComTestFirst/assets/108028195/5f8fdffc-4639-4b0b-bbfc-4ee4ed10b615)
+
+Spring precisa saber como obter o valor do parâmetro requestedId. Isso é feito usando a anotação @PathVariable. O fato do nome do parâmetro corresponder ao texto {requestedId} dentro do parâmetro @GetMapping permite que o Spring atribua (injete) o valor correto à variável requestedId:
+
+![cont3](https://github.com/leila-bwt/APIRestComTestFirst/assets/108028195/25ea0192-494a-4154-8692-58dc296b3e3f)
+
+REST diz que a resposta precisa conter um Cash Card em seu corpo e um código de resposta 200 (OK). Spring Web fornece a classe ResponseEntity para essa finalidade. Ele também fornece vários métodos utilitários para produzir Entidades de Resposta. Aqui, você pode usar ResponseEntity para criar um ResponseEntity com código 200 (OK) e um corpo contendo um arquivo CashCard. A implementação final é assim:
+
+![cont4](https://github.com/leila-bwt/APIRestComTestFirst/assets/108028195/92ea2684-7208-4947-a083-bb34c02d93b5)
+
+
+
+## Escrevendo um Teste para o endpoint GET
+
+Embora @Autowired seja uma forma de injeção de dependência Spring, é melhor usá-lo apenas em testes.
+
+
 
 
 

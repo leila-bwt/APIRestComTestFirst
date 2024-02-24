@@ -1,20 +1,44 @@
 package example.cashcard;
 
+
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.json.JsonTest;
+import org.springframework.boot.test.json.JacksonTester;
+
+import java.io.IOException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
+@JsonTest
 class CashCardJsonTest {
 
-   @Test
-   void myFirstTest() {
-      assertThat(1).isEqualTo(42);
-   }
+    @Autowired
+    private JacksonTester<CashCard> json;
+
+    @Test
+    void cashCardSerializationTest() throws IOException {
+        CashCard cashCard = new CashCard(99L, 123.45);
+        assertThat(json.write(cashCard)).isStrictlyEqualToJson("expected.json");
+        assertThat(json.write(cashCard)).hasJsonPathNumberValue("@.id");
+        assertThat(json.write(cashCard)).extractingJsonPathNumberValue("@.id")
+                .isEqualTo(99);
+        assertThat(json.write(cashCard)).hasJsonPathNumberValue("@.amount");
+        assertThat(json.write(cashCard)).extractingJsonPathNumberValue("@.amount")
+                .isEqualTo(123.45);
+    }
+
+    @Test
+    void cashCardDeserializationTest() throws IOException {
+        String expected = """
+                {
+                    "id": 99,
+                    "amount": 123.45
+                }
+                """;
+        assertThat(json.parse(expected))
+                .isEqualTo(new CashCard(99L, 123.45));
+        assertThat(json.parseObject(expected).id()).isEqualTo(99);
+        assertThat(json.parseObject(expected).amount()).isEqualTo(123.45);
+    }
 }
-
-//A anotação @Test faz parte da biblioteca JUnit e o método assertThat faz parte da biblioteca AssertJ. Ambas as bibliotecas são importadas após a instrução package.
-
-//É importante ter um teste com falha primeiro para que você possa ter alta confiança de que tudo o que você fez para corrigir o teste realmente funcionou.
-
-//Nesse caso,o teste 'myFisrtTest' falhou, enquanto o CashCardsApplicationTest existente da lição anterior foi bem-sucedido.Você já esperava isso, pois o número 1 não é igual ao número 42. Linha 10
-
-//Para "consertar" o teste, você pode afirmar uma afirmação que sabe ser verdadeira: assertThat(42).isEqualTo(42);

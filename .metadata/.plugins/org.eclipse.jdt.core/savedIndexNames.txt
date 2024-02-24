@@ -1,21 +1,2 @@
 INDEX VERSION 1.131+C:\Users\Pichau\OneDrive\Área de Trabalho\FamilyCashCard\.metadata\.plugins\org.eclipse.jdt.core
-10238472.index
-1740986823.index
-2062976360.index
-1003485289.index
-685451522.index
-2762885388.index
-1308933508.index
-2361047006.index
-309215977.index
-827021396.index
-151025674.index
-4284383549.index
-2628706810.index
-4029090863.index
-3771746841.index
-3600743678.index
 1865797976.index
-3258931098.index
-4227892077.index
-1124847744.index
